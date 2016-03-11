@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Match Game</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            #leftPart {
+                height: 80vh;
+                width: 49.5%;
+                position: absolute;
+            }
+            
+            #rightPart {
+                left: 50.5%;
+                height: 80vh;
+                width: 49.5%;
+                position: absolute;
+            }
+            
+            #separator {
+                height: 80vh;
+                left: 49.5%;
+                width: 1%;
+                background-color: black;
+                position: absolute;
+            }
+            
+            .smiley {
+                position: absolute;
+            }
+        </style>
+    </head>
+    <body onload="generateFaces();">
+        <h1>Matching Game</h1>
+        <p>Click on the extra smiling face on the left.</p>
+        <div id="leftPart"></div>
+        <div id="separator"></div>
+        <div id="rightPart"></div>
+        <script>
+            
+            var numberOfFaces = 5;
+            
+            var leftSide = document.getElementById("leftPart");
+            var rightSide = document.getElementById("rightPart");
+            var frameH = leftSide.clientHeight - 100;
+            var frameW = leftSide.clientWidth - 100;
+            
+            function addChildLeft() {
+                var face = document.createElement('img');
+                face.setAttribute('src', 'http://home.cse.ust.hk/~rossiter/mooc/matching_game/smile.png');
+                face.setAttribute('class', 'smiley');
+                face.style.left = (Math.floor(Math.random()*frameW)) + "px";
+                face.style.top = (Math.floor(Math.random()*frameH)) + "px";
+
+                leftSide.appendChild(face);
+            }
+            
+            function generateFaces() {
+
+                for(var i = 0; i < numberOfFaces; i ++) {
+                    addChildLeft();
+                }
+
+                var leftCopy = leftSide.cloneNode(true);
+                rightSide.appendChild(leftCopy);
+                
+                addChildLeft();  
+                
+                var faces = leftSide.childNodes;
+                for(var i = 0; i < numberOfFaces; i ++) {
+                    var node = faces[i];
+                    node.onclick = gameOver;
+                }
+                
+                leftSide.lastChild.onclick =
+                function nextLevel(event){
+                    event.stopPropagation();
+                    leftSide.innerHTML = "";
+                    rightSide.innerHTML = "";
+                    numberOfFaces += 5;
+                    generateFaces();
+                };
+            }
+ 
+            var gameOver = function(event) {
+                    alert("Game Over!");
+                    var faces = leftSide.childNodes;
+                    for(var i = 0; i < numberOfFaces+1; i ++) {
+                        var node = faces[i];
+                        node.onclick = null;
+                    }
+                };
+ 
+        </script>
+    </body>
+</html>
